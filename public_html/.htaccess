@@ -1,0 +1,26 @@
+<IfModule mod_rewrite.c>
+ <IfModule mod_negotiation.c>
+  Options -MultiViews
+ </IfModule>
+
+ RewriteEngine On
+
+ # Chuyển hướng từ www sang không www
+ RewriteCond %{HTTP_HOST} ^www\.askmeprivate\.io\.vn [NC]
+ RewriteRule ^(.*)$ https://askmeprivate.io.vn/$1 [L,R=301]
+
+ # Loại bỏ dấu gạch chéo cuối cùng nếu không phải là một thư mục
+ RewriteCond %{REQUEST_FILENAME} !-d
+ RewriteCond %{REQUEST_URI} (.+)/$
+ RewriteRule ^ %1 [L,R=301]
+
+ # Chuyển hướng các yêu cầu không phải là thư mục hoặc tệp hiện có tới index.php
+ RewriteCond %{REQUEST_FILENAME} !-d
+ RewriteCond %{REQUEST_FILENAME} !-f
+ RewriteRule ^ index.php [L]
+
+ # Giữ nguyên tiêu đề HTTP Authorization
+ RewriteCond %{HTTP:Authorization} .
+ RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+</IfModule>
